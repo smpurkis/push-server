@@ -75,7 +75,7 @@ async fn push_message(Json(pnr): web::Json<PushNotificationRequest>) -> impl Res
 
         // Now add payload and encrypt.
         let mut builder = WebPushMessageBuilder::new(&subscription_info);
-        let content = serde_json::to_string(&pnr.data).unwrap();
+        let content = serde_json::to_string(&pnr).unwrap();
         let content = content.as_bytes();
 
         builder.set_payload(ContentEncoding::Aes128Gcm, content);
