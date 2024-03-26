@@ -26,9 +26,9 @@ struct PushNotificationData {
 }
 
 #[derive(Serialize, Deserialize)]
-#[allow(non_snake_case)]
+#[serde(rename_all = "camelCase")]
 struct PushNotificationRedirect {
-    redirectUrl: String,
+    redirect_url: String,
 }
 
 #[derive(Serialize, Deserialize)]
