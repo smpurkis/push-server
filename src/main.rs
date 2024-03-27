@@ -22,7 +22,7 @@ struct PushNotificationData {
     icon: Option<String>,
     badge: Option<String>,
     timestamp: Option<i64>, // Unix timestamp
-    expiration: Some<i64>,
+    expiration: Option<i64>,
     data: PushNotificationRedirect,
 }
 
@@ -82,7 +82,7 @@ async fn push_message(Json(pnr): web::Json<PushNotificationRequest>) -> impl Res
         builder.set_payload(ContentEncoding::Aes128Gcm, content);
         match &pnr.data.expiration {
             Some(expiration) => {
-                builder.set_ttl(expiration);
+                builder.set_ttl(*expiration as u32);
             }
             None => {
                 builder.set_ttl(10 * 60); // 10 minutes
