@@ -22,6 +22,7 @@ struct PushNotificationData {
     icon: Option<String>,
     badge: Option<String>,
     timestamp: Option<i64>, // Unix timestamp
+    expiration: Some<i64>,
     data: PushNotificationRedirect,
 }
 
@@ -79,7 +80,14 @@ async fn push_message(Json(pnr): web::Json<PushNotificationRequest>) -> impl Res
         let content = content.as_bytes();
 
         builder.set_payload(ContentEncoding::Aes128Gcm, content);
-        builder.set_ttl(10 * 60); // 10 minutes
+        match &pnr.data.expiration {
+            Some(expiration) => {
+                builder.set_ttl(expiration);
+            }
+            None => {
+                builder.set_ttl(10 * 60); // 10 minutes
+            }
+        }
         builder.set_vapid_signature(sig_builder);
 
         let client = IsahcWebPushClient::new().unwrap();
